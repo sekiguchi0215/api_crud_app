@@ -29,6 +29,7 @@ class V1::PostsController < ApplicationController
   end
 
   def destroy
+    @post.destroy
   end
 
   private
