@@ -20,6 +20,27 @@ RSpec.describe "V1::Posts", type: :request do
   end
 
   describe "GET #show" do
+    subject { get(v1_post_path(post_id)) }
+
+    context "指定したidの投稿が存在する時" do
+      let(:post) { create(:post) }
+      let(:post_id) { post.id }
+
+      it "指定したidの投稿を取得できること" do
+        subject
+        json = JSON.parse(response.body)
+        expect(response).to have_http_status(:ok)
+        expect(json["title"]).to eq post.title
+        expect(json["content"]).to eq post.content
+      end
+    end
+
+    context "指定したの投稿が存在しない時" do
+      let(:post_id) { 0 }
+      it "エラーが発生すること" do
+        expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
   end
 
   describe "POST #create" do
